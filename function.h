@@ -12,7 +12,7 @@ void header(){
 	printf("\t(Exemplo: lena)\n");
 }
 
-void open_image(){
+/* void open_image(){
 	scanf("%s", nome);
 	strcpy(nomeArq, nome);
 	strcat(nomeArq, ".ppm");
@@ -32,6 +32,7 @@ void open_image(){
 	
 	fclose(imagepath);
 }
+*/
 
 int read_image(int height, int width, char filetype[3], Pixel image[height][width]){
 	int i, j;
