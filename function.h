@@ -12,30 +12,9 @@ void header(){
 	printf("\t(Exemplo: lena)\n");
 }
 
-/* void open_image(){
-	scanf("%s", nome);
-	strcpy(nomeArq, nome);
-	strcat(nomeArq, ".ppm");
-	imagepath = fopen(nomeArq, "r");
-	
-	if(imagepath == NULL){
-        system("clear");
-        printf("Esse arquivo não foi encontrado.\nTente novamente:\n");
-        open_image();
-	}
-
-	fgets(filetype, 3, imagepath);
-	fscanf(imagepath, "%i %i %i", &height, &width, &clrRange);
-	Pixel image[height][width];
-	
-    read_image(height, width, filetype, image);
-	
-	fclose(imagepath);
-}
-*/
-
-int read_image(int height, int width, char filetype[3], Pixel image[height][width]){
+void read_image(int height, int width, char filetype[], Pixel image[height][width], FILE *imagepath){
 	int i, j;
+
 	if(filetype[0] == 'P' && filetype[1] == '3')
         for(i = 0; i < height; i++)
         	for(j = 0; j < width; j++)
@@ -43,21 +22,45 @@ int read_image(int height, int width, char filetype[3], Pixel image[height][widt
     else {
     	system("clear");
     	printf("O tipo de arquivo PPM não é P3!\n");
+    	exit(1);
     }
+
+    fclose(imagepath);
 
 }
 
 void effect_black_white(char nome[50], int height, int width, Pixel image[height][width]){
-	int i, j;
+	int i, j, gray;
 	strcat(nome, "_bw.ppm");
 
 	for(i = 0; i < height; i++)
-		for(j = 0; j < height; j++){ 
-			image[i][j].blue = image[i][j].green; 
-			image[i][j].red = image[i][j].green;
-		}	
+		for(j = 0; j < height; j++){
+			gray = (image[i][j].blue + image[i][j].green + image[i][j].red)/3;
+			image[i][j].blue = gray;
+			image[i][j].red = gray;
+			image[i][j].green = gray;
+		}
 }
 
+void ef_thresholding(char nome[50], int height, int width, int *clrRange, Pixel image[height][width]){
+	int i, j, gray;
+	strcat(nome, "_thr.ppm");
+	for(i = 0; i < height; i++)
+		for(j = 0; j < height; j++){
+			gray = (image[i][j].blue + image[i][j].green + image[i][j].red)/3;
+			if(gray > *clrRange/2){
+                image[i][j].blue = 1;
+                image[i][j].green = 1;
+                image[i][j].red = 1;
+			}else{
+                image[i][j].blue = 0;
+                image[i][j].green = 0;
+                image[i][j].red = 0;
+			}
+		}
+
+    *clrRange = 1;
+}
 void create_new_file(char nome[50], char filetype[3], int height, int width, int clrRange, Pixel image[height][width]){
 	int i, j;
 	FILE *newfile;
