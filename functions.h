@@ -1,10 +1,3 @@
-typedef struct{
-	int red;
-	int green;
-	int blue;
-} Pixel;
-
-
 void header(){
 	system("clear");
 	printf("Bem vindo ao programa!\n");
@@ -12,7 +5,21 @@ void header(){
 	printf("\t(Exemplo: lena)\n");
 }
 
-void read_image(int height, int width, char filetype[], Pixel image[height][width], FILE *imagepath){
+FILE *open_image(char name[]){
+    printf("cheguei");
+	FILE *file = fopen(name, "r");
+	printf("cheguei");
+	if(file == NULL){
+        printf("cheguei");
+		system("clear");
+		printf("Esse arquivo não foi encontrado.\nTente novamente:\n");
+		exit(1);
+	}
+	printf("cheguei");
+	return file;
+}
+
+void read_image(Pixel image[height][width], FILE *imagepath){
 	int i, j;
 
 	if(filetype[0] == 'P' && filetype[1] == '3')
@@ -29,7 +36,7 @@ void read_image(int height, int width, char filetype[], Pixel image[height][widt
 
 }
 
-void effect_black_white(char nome[50], int height, int width, Pixel image[height][width]){
+void effect_black_white(Pixel image[height][width]){
 	int i, j, gray;
 	strcat(nome, "_bw.ppm");
 
@@ -42,13 +49,13 @@ void effect_black_white(char nome[50], int height, int width, Pixel image[height
 		}
 }
 
-void ef_thresholding(char nome[50], int height, int width, int *clrRange, Pixel image[height][width]){
+void ef_thresholding(Pixel image[height][width]){
 	int i, j, gray;
 	strcat(nome, "_thr.ppm");
 	for(i = 0; i < height; i++)
 		for(j = 0; j < height; j++){
 			gray = (image[i][j].blue + image[i][j].green + image[i][j].red)/3;
-			if(gray > *clrRange/2){
+			if(gray > clrRange/2){
                 image[i][j].blue = 1;
                 image[i][j].green = 1;
                 image[i][j].red = 1;
@@ -59,9 +66,9 @@ void ef_thresholding(char nome[50], int height, int width, int *clrRange, Pixel 
 			}
 		}
 
-    *clrRange = 1;
+    clrRange = 1;
 }
-void create_new_file(char nome[50], char filetype[3], int height, int width, int clrRange, Pixel image[height][width]){
+void create_new_file(Pixel image[height][width]){
 	int i, j;
 	FILE *newfile;
 	newfile = fopen(nome, "w");
@@ -75,14 +82,16 @@ void create_new_file(char nome[50], char filetype[3], int height, int width, int
 }
 
 
-/*
-
 void print_options(){
-	printf("thr // Thresholding");
+	system("clear");	
+	printf("== Pressione a opção desejada ==");
+	printf("1- thr // Thresholding");
+	printf("2- bw  // Black & White");
+	printf("================================");
 }
 
-void controller(){
+void controller(int choice){
 
 }
 
-*/
+
